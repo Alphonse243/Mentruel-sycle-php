@@ -1,5 +1,8 @@
 <?php
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // Vérifier que Composer est installé
 if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
     die('❌ Erreur : Composer n\'est pas installé. Exécutez : composer install');
@@ -13,27 +16,30 @@ use Alphonse243\BioCycle\Entity\CycleEntity;
 use Alphonse243\BioCycle\Exception\CycleIrregulierException;
 use Carbon\Carbon;
 
+// Définir la locale par défaut
+Carbon::setLocale('fr_FR');
+
 try {
     // Créer un historique de cycles
     $history = new CycleHistory();
 
     $history->addCycle(new CycleEntity(
-        Carbon::parse('2024-10-01'),
-        Carbon::parse('2024-10-29')
+        Carbon::createFromFormat('Y-m-d', '2024-10-01'),
+        Carbon::createFromFormat('Y-m-d', '2024-10-29')
     ));
 
     $history->addCycle(new CycleEntity(
-        Carbon::parse('2024-10-29'),
-        Carbon::parse('2024-11-26')
+        Carbon::createFromFormat('Y-m-d', '2024-10-29'),
+        Carbon::createFromFormat('Y-m-d', '2024-11-26')
     ));
 
     $history->addCycle(new CycleEntity(
-        Carbon::parse('2024-11-26'),
-        Carbon::parse('2024-12-24')
+        Carbon::createFromFormat('Y-m-d', '2024-11-26'),
+        Carbon::createFromFormat('Y-m-d', '2024-12-24')
     ));
 
     // Créer le calculateur avec la date des dernières règles
-    $calculator = new CycleCalculator($history, Carbon::parse('2024-12-24'));
+    $calculator = new CycleCalculator($history, Carbon::createFromFormat('Y-m-d', '2024-12-24'));
 
     // Obtenir les prédictions formatées pour l'utilisateur
     $formatted = $calculator->getFormattedPrediction('fr');

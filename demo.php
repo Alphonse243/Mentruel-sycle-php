@@ -1,5 +1,8 @@
 <?php
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // Vérifier que Composer est installé
 if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
     die('❌ Erreur : Composer n\'est pas installé. Exécutez : composer install');
@@ -13,6 +16,9 @@ use Alphonse243\BioCycle\Entity\CycleEntity;
 use Alphonse243\BioCycle\Exception\CycleIrregulierException;
 use Carbon\Carbon;
 
+// Définir la locale par défaut
+Carbon::setLocale('fr_FR');
+
 $hasError = false;
 $errorMsg = '';
 $formatted = [];
@@ -22,26 +28,26 @@ $history = new CycleHistory();
 try {
     // Créer un historique de cycles réaliste
     $history->addCycle(new CycleEntity(
-        Carbon::parse('2024-08-15'),
-        Carbon::parse('2024-09-12')
+        Carbon::createFromFormat('Y-m-d', '2024-08-15'),
+        Carbon::createFromFormat('Y-m-d', '2024-09-12')
     ));
 
     $history->addCycle(new CycleEntity(
-        Carbon::parse('2024-09-12'),
-        Carbon::parse('2024-10-10')
+        Carbon::createFromFormat('Y-m-d', '2024-09-12'),
+        Carbon::createFromFormat('Y-m-d', '2024-10-10')
     ));
 
     $history->addCycle(new CycleEntity(
-        Carbon::parse('2024-10-10'),
-        Carbon::parse('2024-11-07')
+        Carbon::createFromFormat('Y-m-d', '2024-10-10'),
+        Carbon::createFromFormat('Y-m-d', '2024-11-07')
     ));
 
     $history->addCycle(new CycleEntity(
-        Carbon::parse('2024-11-07'),
-        Carbon::parse('2024-12-05')
+        Carbon::createFromFormat('Y-m-d', '2024-11-07'),
+        Carbon::createFromFormat('Y-m-d', '2024-12-05')
     ));
 
-    $lastPeriod = Carbon::parse('2024-12-05');
+    $lastPeriod = Carbon::createFromFormat('Y-m-d', '2024-12-05');
     $calculator = new CycleCalculator($history, $lastPeriod);
 
     $prediction = $calculator->predictNextCycle();

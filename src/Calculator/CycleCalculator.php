@@ -74,15 +74,31 @@ class CycleCalculator
     {
         $prediction = $this->predictNextCycle();
 
+        // Fallback si translatedFormat échoue
+        try {
+            $dernièresRègles = $prediction['dernières_règles']->translatedFormat('d F Y', locale: $locale);
+            $prochainésRègles = $prediction['prochaines_règles']->translatedFormat('d F Y', locale: $locale);
+            $ovulation = $prediction['ovulation']->translatedFormat('d F Y', locale: $locale);
+            $fertiliteDebut = $prediction['fenetre_fertilité_début']->translatedFormat('d F', locale: $locale);
+            $fertiliteFinDate = $prediction['fenetre_fertilité_fin']->translatedFormat('d F Y', locale: $locale);
+        } catch (Exception $e) {
+            // Fallback: utiliser format simple si locale n'existe pas
+            $dernièresRègles = $prediction['dernières_règles']->format('d/m/Y');
+            $prochainésRègles = $prediction['prochaines_règles']->format('d/m/Y');
+            $ovulation = $prediction['ovulation']->format('d/m/Y');
+            $fertiliteDebut = $prediction['fenetre_fertilité_début']->format('d/m');
+            $fertiliteFinDate = $prediction['fenetre_fertilité_fin']->format('d/m/Y');
+        }
+
         return [
-            'dernières_règles' => $prediction['dernières_règles']->translatedFormat('d F Y', locale: $locale),
-            'prochaines_règles' => $prediction['prochaines_règles']->translatedFormat('d F Y', locale: $locale),
+            'dernières_règles' => $dernièresRègles,
+            'prochaines_règles' => $prochainésRègles,
             'prochaines_règles_dans' => $prediction['prochaines_règles']->diffForHumans(),
-            'ovulation' => $prediction['ovulation']->translatedFormat('d F Y', locale: $locale),
+            'ovulation' => $ovulation,
             'fenetre_fertilité' => sprintf(
                 "du %s au %s",
-                $prediction['fenetre_fertilité_début']->translatedFormat('d F', locale: $locale),
-                $prediction['fenetre_fertilité_fin']->translatedFormat('d F Y', locale: $locale)
+                $fertiliteDebut,
+                $fertiliteFinDate
             ),
             'durée_cycle_moyenne' => $prediction['durée_cycle_moyenne'] . ' jours',
             'ovulation_forcée' => $prediction['ovulation_forcée'],
