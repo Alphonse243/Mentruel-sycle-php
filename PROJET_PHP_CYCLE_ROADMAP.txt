@@ -10,14 +10,14 @@ adaptatif pour le cycle menstruel.
 ----------------------------------------------------------------------
 ÉTAPE 1 : INITIALISATION DE L'ENVIRONNEMENT
 ----------------------------------------------------------------------
-1. Créer le dossier du projet : `mkdir biocycle-php && cd biocycle-php`
+1. Créer le dossier du projet : `mkdir Mentruel-sycle-php && cd Mentruel-sycle-php`
 2. Initialiser Composer : `composer init`
-   - Vendor/Name : katumba/biocycle-predictor
+   - Vendor/Name : Alphonse243/biocycle-predictor
    - License : MIT
 3. Installer Carbon : `composer require nesbot/carbon`
 4. Configurer l'Autoload dans composer.json :
    "autoload": {
-       "psr-4": { "Katumba\\BioCycle\\": "src/" }
+       "psr-4": { "Alphonse243\\BioCycle\\": "src/" }
    }
 
 ----------------------------------------------------------------------
