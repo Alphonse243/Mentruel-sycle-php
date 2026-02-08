@@ -74,15 +74,20 @@ class CycleCalculator
     {
         $prediction = $this->predictNextCycle();
 
+        // Définir la locale pour Carbon
+        if ($locale === 'fr') {
+            Carbon::setLocale('fr_FR');
+        }
+
         // Fallback si translatedFormat échoue
         try {
-            $dernièresRègles = $prediction['dernières_règles']->translatedFormat('d F Y', locale: $locale);
-            $prochainésRègles = $prediction['prochaines_règles']->translatedFormat('d F Y', locale: $locale);
-            $ovulation = $prediction['ovulation']->translatedFormat('d F Y', locale: $locale);
-            $fertiliteDebut = $prediction['fenetre_fertilité_début']->translatedFormat('d F', locale: $locale);
-            $fertiliteFinDate = $prediction['fenetre_fertilité_fin']->translatedFormat('d F Y', locale: $locale);
+            $dernièresRègles = $prediction['dernières_règles']->translatedFormat('d F Y');
+            $prochainésRègles = $prediction['prochaines_règles']->translatedFormat('d F Y');
+            $ovulation = $prediction['ovulation']->translatedFormat('d F Y');
+            $fertiliteDebut = $prediction['fenetre_fertilité_début']->translatedFormat('d F');
+            $fertiliteFinDate = $prediction['fenetre_fertilité_fin']->translatedFormat('d F Y');
         } catch (Exception $e) {
-            // Fallback: utiliser format simple si locale n'existe pas
+            // Fallback: utiliser format simple si translatedFormat échoue
             $dernièresRègles = $prediction['dernières_règles']->format('d/m/Y');
             $prochainésRègles = $prediction['prochaines_règles']->format('d/m/Y');
             $ovulation = $prediction['ovulation']->format('d/m/Y');

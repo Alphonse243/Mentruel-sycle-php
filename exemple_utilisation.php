@@ -16,9 +16,6 @@ use Alphonse243\BioCycle\Entity\CycleEntity;
 use Alphonse243\BioCycle\Exception\CycleIrregulierException;
 use Carbon\Carbon;
 
-// Définir la locale par défaut
-Carbon::setLocale('fr_FR');
-
 try {
     // Créer un historique de cycles
     $history = new CycleHistory();
