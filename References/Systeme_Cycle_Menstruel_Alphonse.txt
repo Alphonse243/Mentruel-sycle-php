@@ -1,0 +1,68 @@
+======================================================================
+DOSSIER TECHNIQUE : BIOLOGIE ET ALGORITHME DU CYCLE MENSTRUEL
+Destinataire : Katumba Tchibambe Alphonse
+Date de génération : Février 2026
+Objet : Modélisation d'un cycle adaptatif (Régulier & Irrégulier)
+======================================================================
+
+I. FONDAMENTAUX BIOLOGIQUES
+---------------------------
+Le cycle commence le premier jour des règles (J1).
+Le but est la préparation à la reproduction via 4 phases :
+
+1. Phase Menstruelle (J1-J5) : Chute hormonale, évacuation de l'endomètre.
+2. Phase Folliculaire (J1-J13) : Maturation de l'ovule via l'Oestrogène.
+3. Ovulation (Env. J14) : Libération de l'ovule (déclenchée par le pic de LH).
+4. Phase Lutéale (J15-J28) : Sécrétion de Progestérone. 
+   DURÉE FIXE : Cette phase dure presque toujours 14 jours.
+
+II. LOGIQUE DE L'ALGORITHME (MÉTHODE ADAPTATIVE)
+------------------------------------------------
+L'algorithme doit évoluer d'un modèle statique vers un modèle dynamique.
+
+A. INITIALISATION (Mois 1) :
+   - Variable : J1 (Date de début)
+   - Variable : Duree_Estimee (Par défaut 28 jours ou saisie utilisateur)
+   - Calcul : Prochaines_Regles = J1 + Duree_Estimee
+   - Calcul : Ovulation = Prochaines_Regles - 14
+
+B. MISE À JOUR ET APPRENTISSAGE (Mois 2+) :
+   L'algorithme utilise une moyenne mobile pour absorber les irrégularités.
+   - Formule : Moyenne_Cycle = (Somme des n derniers cycles) / n
+   - Recommandation : n = 6 cycles pour une fiabilité optimale.
+
+C. GESTION DES IRRÉGULARITÉS (LOGIQUE DE CORRECTION) :
+   - SI (Variation > 7 jours par rapport à la moyenne) :
+     -> Marquer le cycle comme "Atypique". 
+     -> Envoyer Alerte : "Facteur externe probable (Stress, Santé)".
+   - SI (Saisie manuelle d'un signe d'ovulation : glaire cervicale type blanc d'oeuf) :
+     -> Forcer la prédiction : Prochaines_Regles = Date_Signe + 14.
+     -> La donnée biologique prime sur la statistique.
+
+III. VARIABLES D'INFLUENCE (PARAMÈTRES D'ENTRÉE)
+-----------------------------------------------
+Pour affiner les prédictions, l'algorithme doit considérer ces facteurs :
+
+1. LE STRESS (Cortisol) : Bloque l'ovulation ou la décale.
+2. L'IMC (Poids) : Un poids trop bas ou trop haut perturbe la synthèse d'Oestrogène.
+3. LE SOMMEIL : Les cycles circadiens régulent la LH et la FSH.
+4. L'ACTIVITÉ PHYSIQUE : Le sport intensif peut stopper le cycle (Aménorrhée).
+
+IV. TABLEAU DE BORD DES HORMONES ET IMPACTS
+-------------------------------------------
+| Hormone      | Rôle Principal          | Impact sur le Sujet          |
+| :----------- | :---------------------- | :--------------------------- |
+| Oestrogène   | Reconstruction utérine  | Énergie haute, peau nette    |
+| Progestérone | Maintien de l'utérus    | Température hausse, calme    |
+| LH / FSH     | Déclencheur ovulation   | Pic de fertilité             |
+| Sérotonine   | Humeur (liée aux oest.) | Chute = Irritabilité (SPM)   |
+
+V. ALERTES SANTÉ (FONCTIONS DE SÉCURITÉ)
+----------------------------------------
+- Alerte "Cycle Court" : Si moyenne < 21 jours.
+- Alerte "Cycle Long" : Si moyenne > 35 jours.
+- Alerte "Aménorrhée" : Si absence de règles > 45 jours.
+
+======================================================================
+DOCUMENT FIN - PROPRIÉTÉ DE KATUMBA TCHIBAMBE ALPHONSE
+======================================================================
