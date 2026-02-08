@@ -1,5 +1,10 @@
 <?php
 
+// Vérifier que Composer est installé
+if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
+    die('❌ Erreur : Composer n\'est pas installé. Exécutez : composer install');
+}
+
 require_once __DIR__ . '/vendor/autoload.php';
 
 use Alphonse243\BioCycle\Calculator\CycleCalculator;
@@ -8,39 +13,47 @@ use Alphonse243\BioCycle\Entity\CycleEntity;
 use Alphonse243\BioCycle\Exception\CycleIrregulierException;
 use Carbon\Carbon;
 
-// Créer un historique de cycles réaliste
+$hasError = false;
+$errorMsg = '';
+$formatted = [];
+$prediction = [];
 $history = new CycleHistory();
 
-$history->addCycle(new CycleEntity(
-    Carbon::parse('2024-08-15'),
-    Carbon::parse('2024-09-12')
-));
-
-$history->addCycle(new CycleEntity(
-    Carbon::parse('2024-09-12'),
-    Carbon::parse('2024-10-10')
-));
-
-$history->addCycle(new CycleEntity(
-    Carbon::parse('2024-10-10'),
-    Carbon::parse('2024-11-07')
-));
-
-$history->addCycle(new CycleEntity(
-    Carbon::parse('2024-11-07'),
-    Carbon::parse('2024-12-05')
-));
-
-$lastPeriod = Carbon::parse('2024-12-05');
-$calculator = new CycleCalculator($history, $lastPeriod);
-
 try {
+    // Créer un historique de cycles réaliste
+    $history->addCycle(new CycleEntity(
+        Carbon::parse('2024-08-15'),
+        Carbon::parse('2024-09-12')
+    ));
+
+    $history->addCycle(new CycleEntity(
+        Carbon::parse('2024-09-12'),
+        Carbon::parse('2024-10-10')
+    ));
+
+    $history->addCycle(new CycleEntity(
+        Carbon::parse('2024-10-10'),
+        Carbon::parse('2024-11-07')
+    ));
+
+    $history->addCycle(new CycleEntity(
+        Carbon::parse('2024-11-07'),
+        Carbon::parse('2024-12-05')
+    ));
+
+    $lastPeriod = Carbon::parse('2024-12-05');
+    $calculator = new CycleCalculator($history, $lastPeriod);
+
     $prediction = $calculator->predictNextCycle();
     $formatted = $calculator->getFormattedPrediction('fr');
-    $hasError = false;
+    
 } catch (CycleIrregulierException $e) {
     $hasError = true;
     $errorMsg = $e->getMessage();
+} catch (Exception $e) {
+    $hasError = true;
+    $errorMsg = 'Erreur système : ' . $e->getMessage();
+    error_log('BioCycle Error: ' . $e->getTraceAsString());
 }
 
 ?>
@@ -189,19 +202,19 @@ try {
                 <div class="prediction-grid">
                     <div class="stat">
                         <div class="stat-label">Dernières règles</div>
-                        <div class="stat-value"><?php echo $formatted['dernières_règles']; ?></div>
+                        <div class="stat-value"><?php echo htmlspecialchars($formatted['dernières_règles'] ?? 'N/A'); ?></div>
                     </div>
                     <div class="stat">
                         <div class="stat-label">Prochaines règles</div>
-                        <div class="stat-value"><?php echo $formatted['prochaines_règles']; ?></div>
+                        <div class="stat-value"><?php echo htmlspecialchars($formatted['prochaines_règles'] ?? 'N/A'); ?></div>
                     </div>
                     <div class="stat">
                         <div class="stat-label">Prochaines dans</div>
-                        <div class="stat-value"><?php echo $formatted['prochaines_règles_dans']; ?></div>
+                        <div class="stat-value"><?php echo htmlspecialchars($formatted['prochaines_règles_dans'] ?? 'N/A'); ?></div>
                     </div>
                     <div class="stat">
                         <div class="stat-label">Ovulation</div>
-                        <div class="stat-value"><?php echo $formatted['ovulation']; ?></div>
+                        <div class="stat-value"><?php echo htmlspecialchars($formatted['ovulation'] ?? 'N/A'); ?></div>
                     </div>
                 </div>
 
@@ -209,7 +222,7 @@ try {
                     <h3 style="color: #666; font-size: 16px; margin-bottom: 12px;">🎯 Fenêtre de fertilité</h3>
                     <div class="stat" style="background: #fff3cd; border-left-color: #ffc107; margin: 0;">
                         <div class="stat-value" style="color: #856404; font-size: 16px;">
-                            <?php echo $formatted['fenetre_fertilité']; ?>
+                            <?php echo htmlspecialchars($formatted['fenetre_fertilité'] ?? 'N/A'); ?>
                         </div>
                     </div>
                 </div>
@@ -220,7 +233,7 @@ try {
                 <div class="history">
                     <div class="history-item">
                         <span class="history-label">Durée moyenne du cycle</span>
-                        <span class="history-value"><?php echo $formatted['durée_cycle_moyenne']; ?></span>
+                        <span class="history-value"><?php echo htmlspecialchars($formatted['durée_cycle_moyenne'] ?? 'N/A'); ?></span>
                     </div>
                     <div class="history-item">
                         <span class="history-label">Nombre de cycles enregistrés</span>
@@ -228,7 +241,7 @@ try {
                     </div>
                     <div class="history-item">
                         <span class="history-label">Ovulation forcée</span>
-                        <span class="history-value"><?php echo $prediction['ovulation_forcée'] ? 'OUI' : 'NON'; ?></span>
+                        <span class="history-value"><?php echo ($prediction['ovulation_forcée'] ?? false) ? 'OUI' : 'NON'; ?></span>
                     </div>
                     <div class="history-item">
                         <span class="history-label">Fiabilité</span>
@@ -240,7 +253,7 @@ try {
         <?php else: ?>
             <div class="card">
                 <div class="error-box">
-                    ⚠️ <strong>Attention :</strong> <?php echo $errorMsg; ?>
+                    ⚠️ <strong>Attention :</strong> <?php echo htmlspecialchars($errorMsg); ?>
                 </div>
                 <p style="color: #666; margin-top: 15px;">
                     Votre cycle détecte une irrégularité. Consultez un professionnel de santé si le problème persiste.
