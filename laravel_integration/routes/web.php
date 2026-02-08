@@ -3,4 +3,4 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BioCycleController;
 
-Route::get('/biocycle/demo', [BioCycleController::class, 'demo']);
+Route::match(['get','post'], '/biocycle/demo', [BioCycleController::class, 'demo']);
