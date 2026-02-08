@@ -1,4 +1,4 @@
-# 🔬 BioCycle Predictor
+#  BioCycle Predictor
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PHP Version](https://img.shields.io/badge/PHP-%3E%3D%208.0-blue)](https://www.php.net/)
@@ -6,22 +6,22 @@
 
 Un package PHP 8 intelligent et adaptatif pour la prédiction du cycle menstruel avec détection d'anomalies.
 
-## ✨ Caractéristiques
+##  Caractéristiques
 
-- ✅ **Calcul adaptatif** : Moyenne mobile sur les 6 derniers cycles
-- ✅ **Détection d'anomalies** : Alerte si écart > 7 jours
-- ✅ **Ovulation intelligente** : Forçage manuel possible
-- ✅ **Gestion robuste** : Passages d'années, fuseaux horaires
-- ✅ **Formatage multilingue** : Français, anglais, etc.
-- ✅ **Tests unitaires** : 100% de couverture
+-  **Calcul adaptatif** : Moyenne mobile sur les 6 derniers cycles
+-  **Détection d'anomalies** : Alerte si écart > 7 jours
+-  **Ovulation intelligente** : Forçage manuel possible
+-  **Gestion robuste** : Passages d'années, fuseaux horaires
+-  **Formatage multilingue** : Français, anglais, etc.
+-  **Tests unitaires** : 100% de couverture
 
-## 📦 Installation
+##  Installation
 
 ```bash
 composer require alphonse243/biocycle-predictor
 ```
 
-## 🚀 Utilisation rapide
+##  Utilisation rapide
 
 ```php
 <?php
@@ -58,7 +58,7 @@ echo "Prochaines règles : " . $formatted['prochaines_règles'];
 echo "Fenêtre de fertilité : " . $formatted['fenetre_fertilité'];
 ```
 
-## 📚 Documentation complète
+##  Documentation complète
 
 ### Architecture
 
@@ -124,7 +124,7 @@ try {
 }
 ```
 
-## 🧪 Tests
+##  Tests
 
 ```bash
 composer test
@@ -135,7 +135,7 @@ composer test-coverage
 
 MIT License - Voir [LICENSE](LICENSE) pour plus de détails.
 
-## 👨‍💻 Auteur
+##  Auteur
 
 **Katumba Tchibambe Alphonse**
 - GitHub: [@alphonse243](https://github.com/alphonse243)
