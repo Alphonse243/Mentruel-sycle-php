@@ -27,11 +27,3 @@ jobs:
     
     - name: Run tests
       run: composer test
-    
-    - name: Generate coverage
-      run: composer test-coverage
-      if: matrix.php-version == '8.3'
-    
-    - name: Upload coverage
-      uses: codecov/codecov-action@v3
-      if: matrix.php-version == '8.3'
