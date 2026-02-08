@@ -9,6 +9,8 @@
             "email": "alphonse@example.com"
         }
     ],
+    "homepage": "https://github.com/alphonse243/biocycle-predictor",
+    "keywords": ["cycle", "menstrual", "predictor", "ovulation", "fertility"],
     "require": {
         "php": "^8.0",
         "nesbot/carbon": "^2.68 || ^3.0"
@@ -25,5 +27,10 @@
         "psr-4": {
             "Alphonse243\\BioCycle\\Tests\\": "tests/"
         }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-html coverage",
+        "demo": "php exemple_utilisation.php"
     }
 }
