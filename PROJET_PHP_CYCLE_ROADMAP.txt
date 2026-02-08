@@ -1,0 +1,84 @@
+======================================================================
+ROADMAP DÉVELOPPEMENT : PACKAGE PHP "BIOCYCLE-PREDICTOR"
+Auteur : Plan technique pour Katumba Tchibambe Alphonse
+Technologie : PHP 8.x, Composer, Carbon Library
+======================================================================
+
+Ce document décrit les étapes de création d'un moteur de calcul 
+adaptatif pour le cycle menstruel.
+
+----------------------------------------------------------------------
+ÉTAPE 1 : INITIALISATION DE L'ENVIRONNEMENT
+----------------------------------------------------------------------
+1. Créer le dossier du projet : `mkdir biocycle-php && cd biocycle-php`
+2. Initialiser Composer : `composer init`
+   - Vendor/Name : katumba/biocycle-predictor
+   - License : MIT
+3. Installer Carbon : `composer require nesbot/carbon`
+4. Configurer l'Autoload dans composer.json :
+   "autoload": {
+       "psr-4": { "Katumba\\BioCycle\\": "src/" }
+   }
+
+----------------------------------------------------------------------
+ÉTAPE 2 : ARCHITECTURE DES CLASSES (src/)
+----------------------------------------------------------------------
+Le package doit être divisé en trois entités logiques :
+
+1. CycleEntity.php : 
+   - Objet simple stockant un cycle passé.
+   - Propriétés : $dateDebut, $dateFin, $dureeRecue.
+
+2. CycleHistory.php : 
+   - Collection d'objets CycleEntity.
+   - Méthode : getAverageDuration() 
+     -> Calcule la moyenne des n derniers cycles pour l'adaptation.
+
+3. CycleCalculator.php (Le Cœur) :
+   - Reçoit un CycleHistory et la date des dernières règles.
+   - Utilise Carbon pour les projections.
+
+----------------------------------------------------------------------
+ÉTAPE 3 : LOGIQUE DE CALCUL AVEC CARBON
+----------------------------------------------------------------------
+Exemple de flux logique pour l'algorithme :
+
+$lastPeriod = Carbon::parse($userDate);
+$average = $history->getAverageDuration(); // ex: 30 jours
+
+$nextPeriod = $lastPeriod->copy()->addDays($average);
+$ovulation = $nextPeriod->copy()->subDays(14);
+$fertilityStart = $ovulation->copy()->subDays(4);
+
+----------------------------------------------------------------------
+ÉTAPE 4 : GESTION DES IRRÉGULARITÉS (ALGORITHME ADAPTATIF)
+----------------------------------------------------------------------
+L'algorithme doit implémenter les "Business Rules" suivantes :
+
+- RÈGLE A (Moyenne Mobile) : Ne calculer la prédiction que sur les 
+  6 derniers cycles enregistrés pour coller à l'évolution du corps.
+- RÈGLE B (Détection d'Anomalie) : Si (CycleActuel - Moyenne) > 7 jours, 
+  lever une Exception "CycleIrregulierException".
+- RÈGLE C (Priorité Biologique) : Permettre une méthode 
+  "forceOvulationDate(Carbon $date)" qui écrase les calculs statistiques 
+  si l'utilisateur détecte un signe physique.
+
+----------------------------------------------------------------------
+ÉTAPE 5 : TESTS ET VALIDATION (tests/)
+----------------------------------------------------------------------
+Indispensable pour garantir la fiabilité :
+- Test 1 : Vérifier la précision sur un cycle parfait de 28 jours.
+- Test 2 : Vérifier le recalcul de la moyenne après un cycle de 35 jours.
+- Test 3 : Vérifier que Carbon gère bien les passages d'années 
+  (ex: cycle commençant en décembre et finissant en janvier).
+
+----------------------------------------------------------------------
+ÉTAPE 6 : INTERFACE DE SORTIE (FORMATAGE)
+----------------------------------------------------------------------
+Utiliser les capacités de Carbon pour l'affichage utilisateur :
+- $date->translatedFormat('d F Y') // ex: "14 Octobre 2026"
+- $date->diffForHumans() // ex: "Dans 5 jours"
+
+======================================================================
+FIN DU DOCUMENT - PRÊT POUR CODAGE
+======================================================================
