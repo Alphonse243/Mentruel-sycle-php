@@ -14,12 +14,14 @@ use Alphonse243\BioCycle\Calculator\CycleCalculator;
 use Alphonse243\BioCycle\Collection\CycleHistory;
 use Alphonse243\BioCycle\Entity\CycleEntity;
 use Alphonse243\BioCycle\Exception\CycleIrregulierException;
+use Alphonse243\BioCycle\Stats\CycleStats;
 use Carbon\Carbon;
 
 $hasError = false;
 $errorMsg = '';
 $formatted = [];
 $prediction = [];
+$stats = [];
 $history = new CycleHistory();
 
 try {
@@ -49,6 +51,10 @@ try {
 
     $prediction = $calculator->predictNextCycle();
     $formatted = $calculator->getFormattedPrediction('fr');
+
+    // Générer les statistiques
+    $cycleStats = new CycleStats($history);
+    $stats = $cycleStats->generateStats();
     
 } catch (CycleIrregulierException $e) {
     $hasError = true;
@@ -247,11 +253,29 @@ try {
                         <span class="history-value"><?php echo ($prediction['ovulation_forcée'] ?? false) ? 'OUI' : 'NON'; ?></span>
                     </div>
                     <div class="history-item">
+                        <span class="history-label">Tendance</span>
+                        <span class="history-value"><?php echo htmlspecialchars($stats['trend'] ?? 'N/A'); ?></span>
+                    </div>
+                    <div class="history-item">
                         <span class="history-label">Fiabilité</span>
                         <span class="history-value">🟢 Haute</span>
                     </div>
                 </div>
             </div>
+
+            <?php if (!empty($stats['chart_data'])): ?>
+            <div class="card">
+                <h2>📈 Graphique des cycles</h2>
+                <div style="display: flex; gap: 10px; align-items: flex-end; height: 150px; padding: 20px 0;">
+                    <?php foreach ($stats['chart_data'] as $index => $data): ?>
+                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                        <div style="width: 100%; background: <?php echo $data['color'] === 'pink-500' ? '#ec4899' : '#fbcfe8'; ?>; height: <?php echo $data['height']; ?>%; border-radius: 4px;"></div>
+                        <small style="margin-top: 10px; color: #666;"><?php echo $data['days']; ?>j</small>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <?php endif; ?>
 
         <?php else: ?>
             <div class="card">

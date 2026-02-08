@@ -109,4 +109,36 @@ class CycleCalculator
             'ovulation_forcée' => $prediction['ovulation_forcée'],
         ];
     }
+
+    /**
+     * Génère des statistiques sur l'historique
+     */
+    public function generateStats(): array
+    {
+        if ($this->history->count() === 0) {
+            return [
+                'average_cycle' => 28,
+                'percentile' => 0,
+                'trend' => 'Pas de données',
+                'cycle_count' => 0,
+            ];
+        }
+
+        $cycles = array_map(
+            fn($c) => $c->getDureeRecue(),
+            $this->history->getCycles()
+        );
+
+        $average = round(array_sum($cycles) / count($cycles), 1);
+        $lastCycle = end($cycles);
+        $trend = $lastCycle <= $average ? 'Stable' : 'En variation';
+
+        return [
+            'average_cycle' => $average,
+            'percentile' => round(($average / 35) * 100),
+            'trend' => $trend,
+            'cycle_count' => count($cycles),
+            'cycles' => $cycles,
+        ];
+    }
 }
